@@ -37,43 +37,54 @@ class Tour extends Model
         return $this->hasMany(TourImage::class);
     }
 
-    // Аксессорлор (Тилге жараша чыгаруу үчүн)
-    // Эскертүү: Бул ыкма жөнөкөй, бирок админкада түзөтүүдө (edit) көйгөй жаратышы мүмкүн.
-    // Админкада түзөтүү үчүн $tour->getAttributes()['name'] колдонсо болот.
+    // Жардамчы метод: JSON же массивден тилди алуу
+    private function getLocalizedValue($value)
+    {
+        // Эгер сап болсо, JSON decode кылып көрөбүз
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            }
+        }
+
+        if (is_array($value)) {
+            $locale = app()->getLocale();
+            return $value[$locale] ?? $value[config('app.fallback_locale')] ?? array_values($value)[0] ?? '';
+        }
+
+        return $value;
+    }
+
+    // Аксессорлор
 
     public function getNameAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getDescriptionAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getShortDescriptionAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getDurationAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getDifficultyAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getGroupSizeAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 }

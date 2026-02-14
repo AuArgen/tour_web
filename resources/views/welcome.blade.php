@@ -11,10 +11,10 @@
 
         <div class="relative z-10 container mx-auto px-6 text-center">
             <span class="inline-block py-1 px-3 rounded-full bg-blue-600/30 border border-blue-400 text-blue-100 text-sm font-semibold mb-6 backdrop-blur-sm animate-fade-in-down">
-                Сезон 2024 открыт
+                Сезон {{ date('Y') }} открыт
             </span>
-            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 drop-shadow-lg">
-                Откройте для себя <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">Кыргызстан</span>
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+                Откройте для себя <br> Кыргызстан
             </h1>
             <p class="text-lg md:text-2xl font-light mb-10 max-w-3xl mx-auto text-gray-200">
                 Страна небесных гор, кристальных озер и древней культуры кочевников. Путешествуйте с комфортом и душой.
@@ -70,8 +70,8 @@
                     <div class="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                         <div class="relative overflow-hidden h-72">
                             <img src="{{ $direction->image_url }}" alt="{{ $direction->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80"></div>
-                            <div class="absolute bottom-4 left-4 text-white">
+                            <div class="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent opacity-90"></div>
+                            <div class="absolute bottom-4 left-4 text-gray-900">
                                 <h3 class="text-2xl font-bold">{{ $direction->name }}</h3>
                             </div>
                         </div>

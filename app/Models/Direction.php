@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Translatable\HasTranslations; // Эгер Spatie пакетин колдонсоңуз, бирок азыр жөнөкөй жол менен кетебиз
 
 class Direction extends Model
 {
@@ -20,19 +19,35 @@ class Direction extends Model
         return $this->hasMany(Tour::class);
     }
 
-    // Тилге жараша алуу үчүн (аксессор)
+    // Жардамчы метод: JSON же массивден тилди алуу
+    private function getLocalizedValue($value)
+    {
+        // Эгер сап болсо, JSON decode кылып көрөбүз
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            }
+        }
+
+        if (is_array($value)) {
+            $locale = app()->getLocale();
+            return $value[$locale] ?? $value[config('app.fallback_locale')] ?? array_values($value)[0] ?? '';
+        }
+
+        return $value;
+    }
+
+    // Аксессорлор
+
     public function getNameAttribute($value)
     {
-        // Эгер JSON болсо, decode кылып, керектүү тилди алабыз
-        // Бирок Laravel casts 'array' кылгандан кийин $value массив болуп келет
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getDescriptionAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     // Админка үчүн чийки (raw) маалыматты алуу керек болсо, башка ат менен алабыз

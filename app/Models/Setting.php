@@ -19,7 +19,23 @@ class Setting extends Model
         $setting = self::where('key', $key)->first();
         if (!$setting) return $default;
 
-        $locale = App::getLocale(); // ru, en, kg
-        return $setting->value[$locale] ?? $setting->value[config('app.fallback_locale')] ?? $default;
+        $value = $setting->value;
+
+        // Эгер сап болсо, JSON decode кылып көрөбүз (double encoding болсо)
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            }
+        }
+
+        // Эгер массив болсо, тилге жараша кайтарабыз
+        if (is_array($value)) {
+            $locale = App::getLocale(); // ru, en, kg
+            return $value[$locale] ?? $value[config('app.fallback_locale')] ?? array_values($value)[0] ?? $default;
+        }
+
+        // Эгер массив эмес болсо (мисалы, жөнөкөй сап), ошону кайтарабыз
+        return $value ?? $default;
     }
 }

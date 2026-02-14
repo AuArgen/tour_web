@@ -13,15 +13,32 @@ class Page extends Model
         'content' => 'array',
     ];
 
+    // Жардамчы метод: JSON же массивден тилди алуу
+    private function getLocalizedValue($value)
+    {
+        // Эгер сап болсо, JSON decode кылып көрөбүз
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $value = $decoded;
+            }
+        }
+
+        if (is_array($value)) {
+            $locale = app()->getLocale();
+            return $value[$locale] ?? $value[config('app.fallback_locale')] ?? array_values($value)[0] ?? '';
+        }
+
+        return $value;
+    }
+
     public function getTitleAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 
     public function getContentAttribute($value)
     {
-        $locale = app()->getLocale();
-        return $value[$locale] ?? $value[config('app.fallback_locale')] ?? '';
+        return $this->getLocalizedValue($value);
     }
 }
